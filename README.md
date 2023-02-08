@@ -1,4 +1,4 @@
-# github.com/speakeasy-sdks/leapml-go-sdk
+# LeapML GO SDK
 
 <!-- Start SDK Installation -->
 ## SDK Installation
