@@ -12,10 +12,8 @@ jobs:
       speakeasy_version: latest
       openapi_doc_location: https://api.leapml.dev/api-json
       languages: |-
-        - go: ./go-sdk/
-        - python: ./python-sdk/
-        - typescript: ./ts-sdk/
-        - java: ./java-sdk
+        - go: ./
+       
       mode: pr
     secrets:
       github_access_token: ${{ secrets.GITHUB_TOKEN }}
