@@ -281,6 +281,60 @@ func (s *fineTuning) SamplesControllerCreate(ctx context.Context, request operat
 	return res, nil
 }
 
+// SamplesControllerCreateURL - Upload Image Samples Via Url
+// Upload one or multiple image sample to a model.
+func (s *fineTuning) SamplesControllerCreateURL(ctx context.Context, request operations.SamplesControllerCreateURLRequest) (*operations.SamplesControllerCreateURLResponse, error) {
+	baseURL := s.serverURL
+	url := utils.GenerateURL(ctx, baseURL, "/api/v1/images/models/{modelId}/samples/url", request.PathParams)
+
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request)
+	if err != nil {
+		return nil, fmt.Errorf("error serializing request body: %w", err)
+	}
+	if bodyReader == nil {
+		return nil, fmt.Errorf("request body is required")
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "POST", url, bodyReader)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+
+	req.Header.Set("Content-Type", reqContentType)
+
+	client := utils.ConfigureSecurityClient(s.defaultClient, request.Security)
+
+	httpRes, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %w", err)
+	}
+	if httpRes == nil {
+		return nil, fmt.Errorf("error sending request: no response")
+	}
+	defer httpRes.Body.Close()
+
+	contentType := httpRes.Header.Get("Content-Type")
+
+	res := &operations.SamplesControllerCreateURLResponse{
+		StatusCode:  int64(httpRes.StatusCode),
+		ContentType: contentType,
+	}
+	switch {
+	case httpRes.StatusCode == 200:
+		switch {
+		case utils.MatchContentType(contentType, `application/json`):
+			var out *shared.TrainingSampleEntity
+			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
+				return nil, err
+			}
+
+			res.TrainingSampleEntity = out
+		}
+	}
+
+	return res, nil
+}
+
 // SamplesControllerFindAll - List Image Samples
 // Given a model ID, returns all image samples for that model.
 func (s *fineTuning) SamplesControllerFindAll(ctx context.Context, request operations.SamplesControllerFindAllRequest) (*operations.SamplesControllerFindAllResponse, error) {

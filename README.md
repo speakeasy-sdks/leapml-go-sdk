@@ -64,6 +64,7 @@ func main() {
 * `ModelsControllerFindOne` - Retrieve a Single Model
 * `ModelsControllerQueue` - Queue Training Job
 * `SamplesControllerCreate` - Upload Image Samples
+* `SamplesControllerCreateURL` - Upload Image Samples Via Url
 * `SamplesControllerFindAll` - List Image Samples
 * `SamplesControllerFindOne` - Get Image Sample
 * `SamplesControllerRemove` - Archive Image Sample
