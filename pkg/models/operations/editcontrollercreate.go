@@ -4,23 +4,19 @@ import (
 	"github.com/speakeasy-sdks/leapml-go-sdk/pkg/models/shared"
 )
 
-type EditControllerCreateRequestBodyBody struct {
-	ImageGuidanceScale *float64 `json:"imageGuidanceScale,omitempty"`
-	Prompt             string   `json:"prompt"`
-	Seed               *float64 `json:"seed,omitempty"`
-	Steps              *float64 `json:"steps,omitempty"`
-	TextGuidanceScale  *float64 `json:"textGuidanceScale,omitempty"`
-	WebhookURL         *string  `json:"webhookUrl,omitempty"`
-}
-
 type EditControllerCreateRequestBodyFiles struct {
 	Content []byte `multipartForm:"content"`
 	Files   string `multipartForm:"name=files"`
 }
 
 type EditControllerCreateRequestBody struct {
-	Body  EditControllerCreateRequestBodyBody  `multipartForm:"name=body,json"`
-	Files EditControllerCreateRequestBodyFiles `multipartForm:"file"`
+	Files              EditControllerCreateRequestBodyFiles `multipartForm:"file"`
+	ImageGuidanceScale *float64                             `multipartForm:"name=imageGuidanceScale"`
+	Prompt             string                               `multipartForm:"name=prompt"`
+	Seed               *float64                             `multipartForm:"name=seed"`
+	Steps              *float64                             `multipartForm:"name=steps"`
+	TextGuidanceScale  *float64                             `multipartForm:"name=textGuidanceScale"`
+	WebhookURL         *string                              `multipartForm:"name=webhookUrl"`
 }
 
 type EditControllerCreateSecurity struct {

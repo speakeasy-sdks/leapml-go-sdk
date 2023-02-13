@@ -80,7 +80,7 @@ func main() {
 
 ### ImageEditing
 
-* `EditControllerCreate` - Edit a photo
+* `EditControllerCreate` - Edit an image
 * `EditControllerFindOne` - Get an edit
 <!-- End SDK Available Operations -->
 

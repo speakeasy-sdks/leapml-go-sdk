@@ -30,8 +30,8 @@ func newImageEditing(defaultClient, securityClient HTTPClient, serverURL, langua
 	}
 }
 
-// EditControllerCreate - Edit a photo
-// Edit a photo using just a prompt
+// EditControllerCreate - Edit an image
+// Edit an image using just a prompt
 func (s *imageEditing) EditControllerCreate(ctx context.Context, request operations.EditControllerCreateRequest) (*operations.EditControllerCreateResponse, error) {
 	baseURL := s.serverURL
 	url := strings.TrimSuffix(baseURL, "/") + "/api/v1/images/edit"
