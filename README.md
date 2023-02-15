@@ -29,25 +29,29 @@ import (
 func main() {
     s := leapml.New()
     
-    req := operations.ModelsControllerCreateRequest{
-        Security: operations.ModelsControllerCreateSecurity{
+    req := operations.SamplesControllerCreateRequest{
+        Security: operations.SamplesControllerCreateSecurity{
             Bearer: shared.SchemeBearer{
                 Authorization: "Bearer YOUR_BEARER_TOKEN_HERE",
             },
         },
-        Request: shared.CreateModelDto{
-            SubjectIdentifier: "unde",
-            SubjectKeyword: "deserunt",
-            Title: "porro",
+        PathParams: operations.SamplesControllerCreatePathParams{
+            ModelID: "unde",
+        },
+        Request: operations.SamplesControllerCreateRequestBody{
+            Files: &operations.SamplesControllerCreateRequestBodyFiles{
+                Content: []byte("deserunt"),
+                Files: "porro",
+            },
         },
     }
     
-    res, err := s.FineTuning.ModelsControllerCreate(ctx, req)
+    res, err := s.FineTuning.SamplesControllerCreate(ctx, req)
     if err != nil {
         log.Fatal(err)
     }
 
-    if res.ModelEntity != nil {
+    if res.TrainingSampleEntity != nil {
         // handle response
     }
 ```
@@ -59,10 +63,6 @@ func main() {
 
 ### FineTuning
 
-* `ModelsControllerCreate` - Create Model
-* `ModelsControllerFindAll` - List All Models
-* `ModelsControllerFindOne` - Retrieve a Single Model
-* `ModelsControllerQueue` - Queue Training Job
 * `SamplesControllerCreate` - Upload Image Samples
 * `SamplesControllerCreateURL` - Upload Image Samples Via Url
 * `SamplesControllerFindAll` - List Image Samples
@@ -70,6 +70,10 @@ func main() {
 * `SamplesControllerRemove` - Archive Image Sample
 * `VersionsControllerFindAll` - List All Model Versions
 * `VersionsControllerFindOne` - Get Model Version
+* `CreateModel` - Create Model
+* `ListAllModels` - List All Models
+* `QueueTrainingJob` - Queue Training Job
+* `RetrieveSingleModel` - Retrieve a Single Model
 
 ### GeneratingImages
 

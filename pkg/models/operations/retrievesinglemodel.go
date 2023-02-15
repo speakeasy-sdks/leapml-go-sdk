@@ -4,20 +4,20 @@ import (
 	"github.com/speakeasy-sdks/leapml-go-sdk/pkg/models/shared"
 )
 
-type ModelsControllerFindOnePathParams struct {
+type RetrieveSingleModelPathParams struct {
 	ModelID string `pathParam:"style=simple,explode=false,name=modelId"`
 }
 
-type ModelsControllerFindOneSecurity struct {
+type RetrieveSingleModelSecurity struct {
 	Bearer shared.SchemeBearer `security:"scheme,type=http,subtype=bearer"`
 }
 
-type ModelsControllerFindOneRequest struct {
-	PathParams ModelsControllerFindOnePathParams
-	Security   ModelsControllerFindOneSecurity
+type RetrieveSingleModelRequest struct {
+	PathParams RetrieveSingleModelPathParams
+	Security   RetrieveSingleModelSecurity
 }
 
-type ModelsControllerFindOneResponse struct {
+type RetrieveSingleModelResponse struct {
 	ContentType string
 	ModelEntity *shared.ModelEntity
 	StatusCode  int64

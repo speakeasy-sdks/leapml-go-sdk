@@ -12,25 +12,29 @@ import (
 func main() {
     s := leapml.New()
     
-    req := operations.ModelsControllerCreateRequest{
-        Security: operations.ModelsControllerCreateSecurity{
+    req := operations.SamplesControllerCreateRequest{
+        Security: operations.SamplesControllerCreateSecurity{
             Bearer: shared.SchemeBearer{
                 Authorization: "Bearer YOUR_BEARER_TOKEN_HERE",
             },
         },
-        Request: shared.CreateModelDto{
-            SubjectIdentifier: "unde",
-            SubjectKeyword: "deserunt",
-            Title: "porro",
+        PathParams: operations.SamplesControllerCreatePathParams{
+            ModelID: "unde",
+        },
+        Request: operations.SamplesControllerCreateRequestBody{
+            Files: &operations.SamplesControllerCreateRequestBodyFiles{
+                Content: []byte("deserunt"),
+                Files: "porro",
+            },
         },
     }
     
-    res, err := s.FineTuning.ModelsControllerCreate(ctx, req)
+    res, err := s.FineTuning.SamplesControllerCreate(ctx, req)
     if err != nil {
         log.Fatal(err)
     }
 
-    if res.ModelEntity != nil {
+    if res.TrainingSampleEntity != nil {
         // handle response
     }
 ```
