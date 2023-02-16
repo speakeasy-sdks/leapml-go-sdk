@@ -6,6 +6,7 @@ type CreateInferenceDto struct {
 	NumberOfImages *float64 `json:"numberOfImages,omitempty"`
 	Prompt         string   `json:"prompt"`
 	PromptStrength *float64 `json:"promptStrength,omitempty"`
+	RestoreFaces   *bool    `json:"restoreFaces,omitempty"`
 	Seed           *float64 `json:"seed,omitempty"`
 	Steps          *float64 `json:"steps,omitempty"`
 	Version        *string  `json:"version,omitempty"`
