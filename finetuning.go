@@ -30,6 +30,40 @@ func newFineTuning(defaultClient, securityClient HTTPClient, serverURL, language
 	}
 }
 
+// ModelsControllerRemove - Delete a Model
+func (s *fineTuning) ModelsControllerRemove(ctx context.Context, request operations.ModelsControllerRemoveRequest) (*operations.ModelsControllerRemoveResponse, error) {
+	baseURL := s.serverURL
+	url := utils.GenerateURL(ctx, baseURL, "/api/v1/images/models/{modelId}", request.PathParams)
+
+	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+
+	client := utils.ConfigureSecurityClient(s.defaultClient, request.Security)
+
+	httpRes, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %w", err)
+	}
+	if httpRes == nil {
+		return nil, fmt.Errorf("error sending request: no response")
+	}
+	defer httpRes.Body.Close()
+
+	contentType := httpRes.Header.Get("Content-Type")
+
+	res := &operations.ModelsControllerRemoveResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: contentType,
+	}
+	switch {
+	case httpRes.StatusCode == 200:
+	}
+
+	return res, nil
+}
+
 // SamplesControllerCreate - Upload Image Samples
 // Upload one or multiple image sample to a model.
 func (s *fineTuning) SamplesControllerCreate(ctx context.Context, request operations.SamplesControllerCreateRequest) (*operations.SamplesControllerCreateResponse, error) {
@@ -65,7 +99,7 @@ func (s *fineTuning) SamplesControllerCreate(ctx context.Context, request operat
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.SamplesControllerCreateResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -105,6 +139,10 @@ func (s *fineTuning) SamplesControllerCreateURL(ctx context.Context, request ope
 
 	req.Header.Set("Content-Type", reqContentType)
 
+	if err := utils.PopulateQueryParams(ctx, req, request.QueryParams); err != nil {
+		return nil, fmt.Errorf("error populating query params: %w", err)
+	}
+
 	client := utils.ConfigureSecurityClient(s.defaultClient, request.Security)
 
 	httpRes, err := client.Do(req)
@@ -119,7 +157,7 @@ func (s *fineTuning) SamplesControllerCreateURL(ctx context.Context, request ope
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.SamplesControllerCreateURLResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -163,7 +201,7 @@ func (s *fineTuning) SamplesControllerFindAll(ctx context.Context, request opera
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.SamplesControllerFindAllResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -207,7 +245,7 @@ func (s *fineTuning) SamplesControllerFindOne(ctx context.Context, request opera
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.SamplesControllerFindOneResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -251,7 +289,7 @@ func (s *fineTuning) SamplesControllerRemove(ctx context.Context, request operat
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.SamplesControllerRemoveResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -295,7 +333,7 @@ func (s *fineTuning) VersionsControllerFindAll(ctx context.Context, request oper
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.VersionsControllerFindAllResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -339,7 +377,7 @@ func (s *fineTuning) VersionsControllerFindOne(ctx context.Context, request oper
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.VersionsControllerFindOneResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -393,7 +431,7 @@ func (s *fineTuning) CreateModel(ctx context.Context, request operations.CreateM
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.CreateModelResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -423,6 +461,10 @@ func (s *fineTuning) ListAllModels(ctx context.Context, request operations.ListA
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 
+	if err := utils.PopulateQueryParams(ctx, req, request.QueryParams); err != nil {
+		return nil, fmt.Errorf("error populating query params: %w", err)
+	}
+
 	client := utils.ConfigureSecurityClient(s.defaultClient, request.Security)
 
 	httpRes, err := client.Do(req)
@@ -437,7 +479,7 @@ func (s *fineTuning) ListAllModels(ctx context.Context, request operations.ListA
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.ListAllModelsResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -492,7 +534,7 @@ func (s *fineTuning) QueueTrainingJob(ctx context.Context, request operations.Qu
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.QueueTrainingJobResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -536,7 +578,7 @@ func (s *fineTuning) RetrieveSingleModel(ctx context.Context, request operations
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.RetrieveSingleModelResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {

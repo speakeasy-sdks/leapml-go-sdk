@@ -21,5 +21,5 @@ type QueueTrainingJobRequest struct {
 type QueueTrainingJobResponse struct {
 	ContentType        string
 	ModelVersionEntity *shared.ModelVersionEntity
-	StatusCode         int64
+	StatusCode         int
 }

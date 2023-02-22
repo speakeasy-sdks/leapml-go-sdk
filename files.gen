@@ -3,6 +3,18 @@ generatingimages.go
 imageediting.go
 leapml.go
 go.mod
+go.sum
+pkg/types/date.go
+pkg/utils/contenttype.go
+pkg/utils/form.go
+pkg/utils/headers.go
+pkg/utils/pathparams.go
+pkg/utils/queryparams.go
+pkg/utils/requestbody.go
+pkg/utils/retries.go
+pkg/utils/security.go
+pkg/utils/utils.go
+pkg/models/operations/modelscontrollerremove.go
 pkg/models/operations/samplescontrollercreate.go
 pkg/models/operations/samplescontrollercreateurl.go
 pkg/models/operations/samplescontrollerfindall.go
@@ -19,6 +31,7 @@ pkg/models/operations/inferencescontrollerfindall.go
 pkg/models/operations/inferencescontrollerfindone.go
 pkg/models/operations/inferencescontrollerremove.go
 pkg/models/operations/editcontrollercreate.go
+pkg/models/operations/editcontrollercreatewithurl.go
 pkg/models/operations/editcontrollerfindone.go
 pkg/models/shared/trainingsampleentity.go
 pkg/models/shared/uploadsamplesviaurldto.go

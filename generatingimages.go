@@ -64,7 +64,7 @@ func (s *generatingImages) InferencesControllerCreate(ctx context.Context, reque
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.InferencesControllerCreateResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -94,6 +94,10 @@ func (s *generatingImages) InferencesControllerFindAll(ctx context.Context, requ
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 
+	if err := utils.PopulateQueryParams(ctx, req, request.QueryParams); err != nil {
+		return nil, fmt.Errorf("error populating query params: %w", err)
+	}
+
 	client := utils.ConfigureSecurityClient(s.defaultClient, request.Security)
 
 	httpRes, err := client.Do(req)
@@ -108,7 +112,7 @@ func (s *generatingImages) InferencesControllerFindAll(ctx context.Context, requ
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.InferencesControllerFindAllResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -143,7 +147,7 @@ func (s *generatingImages) InferencesControllerFindOne(ctx context.Context, requ
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.InferencesControllerFindOneResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -186,7 +190,7 @@ func (s *generatingImages) InferencesControllerRemove(ctx context.Context, reque
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.InferencesControllerRemoveResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {

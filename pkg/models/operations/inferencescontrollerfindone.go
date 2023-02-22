@@ -21,5 +21,5 @@ type InferencesControllerFindOneRequest struct {
 type InferencesControllerFindOneResponse struct {
 	ContentType     string
 	InferenceEntity *shared.InferenceEntity
-	StatusCode      int64
+	StatusCode      int
 }

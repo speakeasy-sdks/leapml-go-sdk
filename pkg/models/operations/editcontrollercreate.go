@@ -31,5 +31,5 @@ type EditControllerCreateRequest struct {
 type EditControllerCreateResponse struct {
 	ContentType string
 	EditEntity  *shared.EditEntity
-	StatusCode  int64
+	StatusCode  int
 }

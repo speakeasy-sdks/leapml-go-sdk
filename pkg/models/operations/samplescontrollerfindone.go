@@ -20,6 +20,6 @@ type SamplesControllerFindOneRequest struct {
 
 type SamplesControllerFindOneResponse struct {
 	ContentType            string
-	StatusCode             int64
+	StatusCode             int
 	TrainingSampleEntities []shared.TrainingSampleEntity
 }

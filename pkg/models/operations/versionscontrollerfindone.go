@@ -21,5 +21,5 @@ type VersionsControllerFindOneRequest struct {
 type VersionsControllerFindOneResponse struct {
 	ContentType        string
 	ModelVersionEntity *shared.ModelVersionEntity
-	StatusCode         int64
+	StatusCode         int
 }

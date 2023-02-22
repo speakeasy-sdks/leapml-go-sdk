@@ -12,29 +12,23 @@ import (
 func main() {
     s := leapml.New()
     
-    req := operations.SamplesControllerCreateRequest{
-        Security: operations.SamplesControllerCreateSecurity{
+    req := operations.ModelsControllerRemoveRequest{
+        Security: operations.ModelsControllerRemoveSecurity{
             Bearer: shared.SchemeBearer{
                 Authorization: "Bearer YOUR_BEARER_TOKEN_HERE",
             },
         },
-        PathParams: operations.SamplesControllerCreatePathParams{
+        PathParams: operations.ModelsControllerRemovePathParams{
             ModelID: "unde",
-        },
-        Request: operations.SamplesControllerCreateRequestBody{
-            Files: &operations.SamplesControllerCreateRequestBodyFiles{
-                Content: []byte("deserunt"),
-                Files: "porro",
-            },
         },
     }
     
-    res, err := s.FineTuning.SamplesControllerCreate(ctx, req)
+    res, err := s.FineTuning.ModelsControllerRemove(ctx, req)
     if err != nil {
         log.Fatal(err)
     }
 
-    if res.TrainingSampleEntity != nil {
+    if res.StatusCode == http.StatusOK {
         // handle response
     }
 ```

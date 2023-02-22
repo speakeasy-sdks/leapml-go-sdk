@@ -16,5 +16,5 @@ type CreateModelRequest struct {
 type CreateModelResponse struct {
 	ContentType string
 	ModelEntity *shared.ModelEntity
-	StatusCode  int64
+	StatusCode  int
 }
