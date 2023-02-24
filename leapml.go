@@ -50,8 +50,8 @@ func WithClient(client HTTPClient) SDKOption {
 func New(opts ...SDKOption) *Leapml {
 	sdk := &Leapml{
 		_language:   "go",
-		_sdkVersion: "1.3.1",
-		_genVersion: "1.4.8",
+		_sdkVersion: "1.4.0",
+		_genVersion: "1.5.0",
 	}
 	for _, opt := range opts {
 		opt(sdk)
