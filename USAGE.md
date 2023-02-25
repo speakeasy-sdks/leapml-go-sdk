@@ -3,6 +3,7 @@
 package main
 
 import (
+    "context"
     "log"
     "github.com/speakeasy-sdks/leapml-go-sdk"
     "github.com/speakeasy-sdks/leapml-go-sdk/pkg/models/shared"
@@ -22,7 +23,8 @@ func main() {
             ModelID: "unde",
         },
     }
-    
+
+    ctx := context.Background()
     res, err := s.FineTuning.ModelsControllerRemove(ctx, req)
     if err != nil {
         log.Fatal(err)
@@ -31,5 +33,6 @@ func main() {
     if res.StatusCode == http.StatusOK {
         // handle response
     }
+}
 ```
 <!-- End SDK Example Usage -->
