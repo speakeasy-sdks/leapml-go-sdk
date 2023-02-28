@@ -1,8 +1,8 @@
 management:
     openapi-checksum: 8700e50b698be82a0e362ad20a11ec88
     openapi-version: "1.0"
-    speakeasy-version: 1.5.3
+    speakeasy-version: 1.5.4
 go:
-    version: 1.4.1
+    version: 1.4.2
     packagename: github.com/speakeasy-sdks/leapml-go-sdk
 sdkclassname: leapml
