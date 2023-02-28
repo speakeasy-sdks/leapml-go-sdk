@@ -20,6 +20,6 @@ type SamplesControllerRemoveRequest struct {
 
 type SamplesControllerRemoveResponse struct {
 	ContentType          string
-	StatusCode           int64
+	StatusCode           int
 	TrainingSampleEntity *shared.TrainingSampleEntity
 }

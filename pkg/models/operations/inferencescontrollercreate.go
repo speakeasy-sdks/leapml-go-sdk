@@ -21,5 +21,5 @@ type InferencesControllerCreateRequest struct {
 type InferencesControllerCreateResponse struct {
 	ContentType     string
 	InferenceEntity *shared.InferenceEntity
-	StatusCode      int64
+	StatusCode      int
 }

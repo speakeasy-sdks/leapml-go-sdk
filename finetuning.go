@@ -30,111 +30,12 @@ func newFineTuning(defaultClient, securityClient HTTPClient, serverURL, language
 	}
 }
 
-// ModelsControllerCreate - Create Model
-// This endpoint will create a new model
-func (s *fineTuning) ModelsControllerCreate(ctx context.Context, request operations.ModelsControllerCreateRequest) (*operations.ModelsControllerCreateResponse, error) {
-	baseURL := s.serverURL
-	url := strings.TrimSuffix(baseURL, "/") + "/api/v1/images/models"
-
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request)
-	if err != nil {
-		return nil, fmt.Errorf("error serializing request body: %w", err)
-	}
-	if bodyReader == nil {
-		return nil, fmt.Errorf("request body is required")
-	}
-
-	req, err := http.NewRequestWithContext(ctx, "POST", url, bodyReader)
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-
-	req.Header.Set("Content-Type", reqContentType)
-
-	client := utils.ConfigureSecurityClient(s.defaultClient, request.Security)
-
-	httpRes, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
-	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
-	}
-	defer httpRes.Body.Close()
-
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.ModelsControllerCreateResponse{
-		StatusCode:  int64(httpRes.StatusCode),
-		ContentType: contentType,
-	}
-	switch {
-	case httpRes.StatusCode == 200:
-		switch {
-		case utils.MatchContentType(contentType, `application/json`):
-			var out *shared.ModelEntity
-			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
-				return nil, err
-			}
-
-			res.ModelEntity = out
-		}
-	}
-
-	return res, nil
-}
-
-// ModelsControllerFindAll - List All Models
-// This endpoint will return a list of all models for the workspace.
-func (s *fineTuning) ModelsControllerFindAll(ctx context.Context, request operations.ModelsControllerFindAllRequest) (*operations.ModelsControllerFindAllResponse, error) {
-	baseURL := s.serverURL
-	url := strings.TrimSuffix(baseURL, "/") + "/api/v1/images/models"
-
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-
-	client := utils.ConfigureSecurityClient(s.defaultClient, request.Security)
-
-	httpRes, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
-	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
-	}
-	defer httpRes.Body.Close()
-
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.ModelsControllerFindAllResponse{
-		StatusCode:  int64(httpRes.StatusCode),
-		ContentType: contentType,
-	}
-	switch {
-	case httpRes.StatusCode == 200:
-		switch {
-		case utils.MatchContentType(contentType, `application/json`):
-			var out []shared.ModelEntity
-			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
-				return nil, err
-			}
-
-			res.ModelEntities = out
-		}
-	}
-
-	return res, nil
-}
-
-// ModelsControllerFindOne - Retrieve a Single Model
-// This endpoint will return a single model.
-func (s *fineTuning) ModelsControllerFindOne(ctx context.Context, request operations.ModelsControllerFindOneRequest) (*operations.ModelsControllerFindOneResponse, error) {
+// ModelsControllerRemove - Delete a Model
+func (s *fineTuning) ModelsControllerRemove(ctx context.Context, request operations.ModelsControllerRemoveRequest) (*operations.ModelsControllerRemoveResponse, error) {
 	baseURL := s.serverURL
 	url := utils.GenerateURL(ctx, baseURL, "/api/v1/images/models/{modelId}", request.PathParams)
 
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
@@ -152,76 +53,12 @@ func (s *fineTuning) ModelsControllerFindOne(ctx context.Context, request operat
 
 	contentType := httpRes.Header.Get("Content-Type")
 
-	res := &operations.ModelsControllerFindOneResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+	res := &operations.ModelsControllerRemoveResponse{
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
 	case httpRes.StatusCode == 200:
-		switch {
-		case utils.MatchContentType(contentType, `application/json`):
-			var out *shared.ModelEntity
-			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
-				return nil, err
-			}
-
-			res.ModelEntity = out
-		}
-	}
-
-	return res, nil
-}
-
-// ModelsControllerQueue - Queue Training Job
-// This endpoint will queue a new model version to be trained.
-//
-//	After uploading image samples via the samples endpoint. You can use this endpoint to queue a new model version to be trained.
-//
-//	Upon completion, you'll be able to query your custom model via the inference endpoint.
-func (s *fineTuning) ModelsControllerQueue(ctx context.Context, request operations.ModelsControllerQueueRequest) (*operations.ModelsControllerQueueResponse, error) {
-	baseURL := s.serverURL
-	url := utils.GenerateURL(ctx, baseURL, "/api/v1/images/models/{modelId}/queue", request.PathParams)
-
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request)
-	if err != nil {
-		return nil, fmt.Errorf("error serializing request body: %w", err)
-	}
-
-	req, err := http.NewRequestWithContext(ctx, "POST", url, bodyReader)
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-
-	req.Header.Set("Content-Type", reqContentType)
-
-	client := utils.ConfigureSecurityClient(s.defaultClient, request.Security)
-
-	httpRes, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
-	}
-	if httpRes == nil {
-		return nil, fmt.Errorf("error sending request: no response")
-	}
-	defer httpRes.Body.Close()
-
-	contentType := httpRes.Header.Get("Content-Type")
-
-	res := &operations.ModelsControllerQueueResponse{
-		StatusCode:  int64(httpRes.StatusCode),
-		ContentType: contentType,
-	}
-	switch {
-	case httpRes.StatusCode == 200:
-		switch {
-		case utils.MatchContentType(contentType, `application/json`):
-			var out *shared.ModelVersionEntity
-			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
-				return nil, err
-			}
-
-			res.ModelVersionEntity = out
-		}
 	}
 
 	return res, nil
@@ -262,7 +99,65 @@ func (s *fineTuning) SamplesControllerCreate(ctx context.Context, request operat
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.SamplesControllerCreateResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
+		ContentType: contentType,
+	}
+	switch {
+	case httpRes.StatusCode == 200:
+		switch {
+		case utils.MatchContentType(contentType, `application/json`):
+			var out *shared.TrainingSampleEntity
+			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
+				return nil, err
+			}
+
+			res.TrainingSampleEntity = out
+		}
+	}
+
+	return res, nil
+}
+
+// SamplesControllerCreateURL - Upload Image Samples Via Url
+// Upload one or multiple image sample to a model.
+func (s *fineTuning) SamplesControllerCreateURL(ctx context.Context, request operations.SamplesControllerCreateURLRequest) (*operations.SamplesControllerCreateURLResponse, error) {
+	baseURL := s.serverURL
+	url := utils.GenerateURL(ctx, baseURL, "/api/v1/images/models/{modelId}/samples/url", request.PathParams)
+
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request)
+	if err != nil {
+		return nil, fmt.Errorf("error serializing request body: %w", err)
+	}
+	if bodyReader == nil {
+		return nil, fmt.Errorf("request body is required")
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "POST", url, bodyReader)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+
+	req.Header.Set("Content-Type", reqContentType)
+
+	if err := utils.PopulateQueryParams(ctx, req, request.QueryParams); err != nil {
+		return nil, fmt.Errorf("error populating query params: %w", err)
+	}
+
+	client := utils.ConfigureSecurityClient(s.defaultClient, request.Security)
+
+	httpRes, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %w", err)
+	}
+	if httpRes == nil {
+		return nil, fmt.Errorf("error sending request: no response")
+	}
+	defer httpRes.Body.Close()
+
+	contentType := httpRes.Header.Get("Content-Type")
+
+	res := &operations.SamplesControllerCreateURLResponse{
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -306,7 +201,7 @@ func (s *fineTuning) SamplesControllerFindAll(ctx context.Context, request opera
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.SamplesControllerFindAllResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -350,7 +245,7 @@ func (s *fineTuning) SamplesControllerFindOne(ctx context.Context, request opera
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.SamplesControllerFindOneResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -394,7 +289,7 @@ func (s *fineTuning) SamplesControllerRemove(ctx context.Context, request operat
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.SamplesControllerRemoveResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -438,7 +333,7 @@ func (s *fineTuning) VersionsControllerFindAll(ctx context.Context, request oper
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.VersionsControllerFindAllResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -482,7 +377,7 @@ func (s *fineTuning) VersionsControllerFindOne(ctx context.Context, request oper
 	contentType := httpRes.Header.Get("Content-Type")
 
 	res := &operations.VersionsControllerFindOneResponse{
-		StatusCode:  int64(httpRes.StatusCode),
+		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 	}
 	switch {
@@ -495,6 +390,207 @@ func (s *fineTuning) VersionsControllerFindOne(ctx context.Context, request oper
 			}
 
 			res.ModelVersionEntity = out
+		}
+	}
+
+	return res, nil
+}
+
+// CreateModel - Create Model
+// This endpoint will create a new model
+func (s *fineTuning) CreateModel(ctx context.Context, request operations.CreateModelRequest) (*operations.CreateModelResponse, error) {
+	baseURL := s.serverURL
+	url := strings.TrimSuffix(baseURL, "/") + "/api/v1/images/models"
+
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request)
+	if err != nil {
+		return nil, fmt.Errorf("error serializing request body: %w", err)
+	}
+	if bodyReader == nil {
+		return nil, fmt.Errorf("request body is required")
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "POST", url, bodyReader)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+
+	req.Header.Set("Content-Type", reqContentType)
+
+	client := utils.ConfigureSecurityClient(s.defaultClient, request.Security)
+
+	httpRes, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %w", err)
+	}
+	if httpRes == nil {
+		return nil, fmt.Errorf("error sending request: no response")
+	}
+	defer httpRes.Body.Close()
+
+	contentType := httpRes.Header.Get("Content-Type")
+
+	res := &operations.CreateModelResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: contentType,
+	}
+	switch {
+	case httpRes.StatusCode == 200:
+		switch {
+		case utils.MatchContentType(contentType, `application/json`):
+			var out *shared.ModelEntity
+			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
+				return nil, err
+			}
+
+			res.ModelEntity = out
+		}
+	}
+
+	return res, nil
+}
+
+// ListAllModels - List All Models
+// This endpoint will return a list of all models for the workspace.
+func (s *fineTuning) ListAllModels(ctx context.Context, request operations.ListAllModelsRequest) (*operations.ListAllModelsResponse, error) {
+	baseURL := s.serverURL
+	url := strings.TrimSuffix(baseURL, "/") + "/api/v1/images/models"
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+
+	if err := utils.PopulateQueryParams(ctx, req, request.QueryParams); err != nil {
+		return nil, fmt.Errorf("error populating query params: %w", err)
+	}
+
+	client := utils.ConfigureSecurityClient(s.defaultClient, request.Security)
+
+	httpRes, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %w", err)
+	}
+	if httpRes == nil {
+		return nil, fmt.Errorf("error sending request: no response")
+	}
+	defer httpRes.Body.Close()
+
+	contentType := httpRes.Header.Get("Content-Type")
+
+	res := &operations.ListAllModelsResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: contentType,
+	}
+	switch {
+	case httpRes.StatusCode == 200:
+		switch {
+		case utils.MatchContentType(contentType, `application/json`):
+			var out []shared.ModelEntity
+			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
+				return nil, err
+			}
+
+			res.ModelEntities = out
+		}
+	}
+
+	return res, nil
+}
+
+// QueueTrainingJob - Queue Training Job
+// This endpoint will queue a new model version to be trained.
+//
+//	After uploading image samples via the samples endpoint. You can use this endpoint to queue a new model version to be trained.
+//
+//	Upon completion, you'll be able to query your custom model via the inference endpoint.
+func (s *fineTuning) QueueTrainingJob(ctx context.Context, request operations.QueueTrainingJobRequest) (*operations.QueueTrainingJobResponse, error) {
+	baseURL := s.serverURL
+	url := utils.GenerateURL(ctx, baseURL, "/api/v1/images/models/{modelId}/queue", request.PathParams)
+
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request)
+	if err != nil {
+		return nil, fmt.Errorf("error serializing request body: %w", err)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "POST", url, bodyReader)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+
+	req.Header.Set("Content-Type", reqContentType)
+
+	client := utils.ConfigureSecurityClient(s.defaultClient, request.Security)
+
+	httpRes, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %w", err)
+	}
+	if httpRes == nil {
+		return nil, fmt.Errorf("error sending request: no response")
+	}
+	defer httpRes.Body.Close()
+
+	contentType := httpRes.Header.Get("Content-Type")
+
+	res := &operations.QueueTrainingJobResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: contentType,
+	}
+	switch {
+	case httpRes.StatusCode == 200:
+		switch {
+		case utils.MatchContentType(contentType, `application/json`):
+			var out *shared.ModelVersionEntity
+			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
+				return nil, err
+			}
+
+			res.ModelVersionEntity = out
+		}
+	}
+
+	return res, nil
+}
+
+// RetrieveSingleModel - Retrieve a Single Model
+// This endpoint will return a single model.
+func (s *fineTuning) RetrieveSingleModel(ctx context.Context, request operations.RetrieveSingleModelRequest) (*operations.RetrieveSingleModelResponse, error) {
+	baseURL := s.serverURL
+	url := utils.GenerateURL(ctx, baseURL, "/api/v1/images/models/{modelId}", request.PathParams)
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+
+	client := utils.ConfigureSecurityClient(s.defaultClient, request.Security)
+
+	httpRes, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error sending request: %w", err)
+	}
+	if httpRes == nil {
+		return nil, fmt.Errorf("error sending request: no response")
+	}
+	defer httpRes.Body.Close()
+
+	contentType := httpRes.Header.Get("Content-Type")
+
+	res := &operations.RetrieveSingleModelResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: contentType,
+	}
+	switch {
+	case httpRes.StatusCode == 200:
+		switch {
+		case utils.MatchContentType(contentType, `application/json`):
+			var out *shared.ModelEntity
+			if err := utils.UnmarshalJsonFromResponseBody(httpRes.Body, &out); err != nil {
+				return nil, err
+			}
+
+			res.ModelEntity = out
 		}
 	}
 

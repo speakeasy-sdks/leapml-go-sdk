@@ -20,5 +20,5 @@ type EditControllerFindOneRequest struct {
 type EditControllerFindOneResponse struct {
 	ContentType string
 	EditEntity  *shared.EditEntity
-	StatusCode  int64
+	StatusCode  int
 }

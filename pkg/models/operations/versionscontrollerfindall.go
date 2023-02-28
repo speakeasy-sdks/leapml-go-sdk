@@ -20,5 +20,5 @@ type VersionsControllerFindAllRequest struct {
 type VersionsControllerFindAllResponse struct {
 	ContentType          string
 	ModelVersionEntities []shared.ModelVersionEntity
-	StatusCode           int64
+	StatusCode           int
 }

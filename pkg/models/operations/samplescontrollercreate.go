@@ -29,6 +29,6 @@ type SamplesControllerCreateRequest struct {
 
 type SamplesControllerCreateResponse struct {
 	ContentType          string
-	StatusCode           int64
+	StatusCode           int
 	TrainingSampleEntity *shared.TrainingSampleEntity
 }

@@ -19,6 +19,6 @@ type SamplesControllerFindAllRequest struct {
 
 type SamplesControllerFindAllResponse struct {
 	ContentType            string
-	StatusCode             int64
+	StatusCode             int
 	TrainingSampleEntities []shared.TrainingSampleEntity
 }

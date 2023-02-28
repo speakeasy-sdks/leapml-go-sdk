@@ -20,5 +20,5 @@ type InferencesControllerRemoveRequest struct {
 
 type InferencesControllerRemoveResponse struct {
 	ContentType string
-	StatusCode  int64
+	StatusCode  int
 }

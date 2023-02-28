@@ -20,6 +20,7 @@ Signup for [access](https://www.leapml.dev/signup) to LeapML to use the API.
 package main
 
 import (
+    "context"
     "log"
     "github.com/speakeasy-sdks/leapml-go-sdk"
     "github.com/speakeasy-sdks/leapml-go-sdk/pkg/models/shared"
@@ -29,27 +30,27 @@ import (
 func main() {
     s := leapml.New()
     
-    req := operations.ModelsControllerCreateRequest{
-        Security: operations.ModelsControllerCreateSecurity{
+    req := operations.ModelsControllerRemoveRequest{
+        Security: operations.ModelsControllerRemoveSecurity{
             Bearer: shared.SchemeBearer{
                 Authorization: "Bearer YOUR_BEARER_TOKEN_HERE",
             },
         },
-        Request: shared.CreateModelDto{
-            SubjectIdentifier: "unde",
-            SubjectKeyword: "deserunt",
-            Title: "porro",
+        PathParams: operations.ModelsControllerRemovePathParams{
+            ModelID: "unde",
         },
     }
-    
-    res, err := s.FineTuning.ModelsControllerCreate(ctx, req)
+
+    ctx := context.Background()
+    res, err := s.FineTuning.ModelsControllerRemove(ctx, req)
     if err != nil {
         log.Fatal(err)
     }
 
-    if res.ModelEntity != nil {
+    if res.StatusCode == http.StatusOK {
         // handle response
     }
+}
 ```
 <!-- End SDK Example Usage -->
 
@@ -59,16 +60,18 @@ func main() {
 
 ### FineTuning
 
-* `ModelsControllerCreate` - Create Model
-* `ModelsControllerFindAll` - List All Models
-* `ModelsControllerFindOne` - Retrieve a Single Model
-* `ModelsControllerQueue` - Queue Training Job
+* `ModelsControllerRemove` - Delete a Model
 * `SamplesControllerCreate` - Upload Image Samples
+* `SamplesControllerCreateURL` - Upload Image Samples Via Url
 * `SamplesControllerFindAll` - List Image Samples
 * `SamplesControllerFindOne` - Get Image Sample
 * `SamplesControllerRemove` - Archive Image Sample
 * `VersionsControllerFindAll` - List All Model Versions
 * `VersionsControllerFindOne` - Get Model Version
+* `CreateModel` - Create Model
+* `ListAllModels` - List All Models
+* `QueueTrainingJob` - Queue Training Job
+* `RetrieveSingleModel` - Retrieve a Single Model
 
 ### GeneratingImages
 
@@ -79,7 +82,8 @@ func main() {
 
 ### ImageEditing
 
-* `EditControllerCreate` - Edit a photo
+* `EditControllerCreate` - Edit an image
+* `EditControllerCreateWithURL` - Edit an image from URL
 * `EditControllerFindOne` - Get an edit
 <!-- End SDK Available Operations -->
 

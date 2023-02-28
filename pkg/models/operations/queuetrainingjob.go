@@ -4,22 +4,22 @@ import (
 	"github.com/speakeasy-sdks/leapml-go-sdk/pkg/models/shared"
 )
 
-type ModelsControllerQueuePathParams struct {
+type QueueTrainingJobPathParams struct {
 	ModelID string `pathParam:"style=simple,explode=false,name=modelId"`
 }
 
-type ModelsControllerQueueSecurity struct {
+type QueueTrainingJobSecurity struct {
 	Bearer shared.SchemeBearer `security:"scheme,type=http,subtype=bearer"`
 }
 
-type ModelsControllerQueueRequest struct {
-	PathParams ModelsControllerQueuePathParams
+type QueueTrainingJobRequest struct {
+	PathParams QueueTrainingJobPathParams
 	Request    *shared.TrainModelDto `request:"mediaType=application/json"`
-	Security   ModelsControllerQueueSecurity
+	Security   QueueTrainingJobSecurity
 }
 
-type ModelsControllerQueueResponse struct {
+type QueueTrainingJobResponse struct {
 	ContentType        string
 	ModelVersionEntity *shared.ModelVersionEntity
-	StatusCode         int64
+	StatusCode         int
 }
